@@ -10,20 +10,26 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
+	"github.com/joho/godotenv"
 )
 
-const BASE_URL = "http://192.168.86.170:49160?query="
-
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	if len(os.Args) < 2 {
 		fmt.Println("You need to pass a param")
 		os.Exit(1)
 	}
 	arg1 := os.Args[1]
 
+	baseURL := os.Getenv("BASE_URL")
+
 	s := spinner.New(spinner.CharSets[8], 100*time.Millisecond)
 	urlEncodedString := url.QueryEscape(arg1)
-	myQueryString := BASE_URL + urlEncodedString
+	myQueryString := baseURL + urlEncodedString
 
 	req, err := http.NewRequest("GET", myQueryString, nil)
 	if err != nil {
